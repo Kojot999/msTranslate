@@ -1,1 +1,0 @@
-export { TranslatorScreen } from "./TranslatorScreen";
