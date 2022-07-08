@@ -6,9 +6,19 @@ import { Loader } from "components/Loader/Loader";
 import { SelectedLanguage } from "components/Selected/Selected";
 import { Switch } from "components/Switch/Switch";
 import { TextCounter } from "components/TextCounter/TextCounter";
+import { useSupportedLanguages } from "hooks";
+import { useEffect } from "react";
 
 export const TranslatorScreen = () => {
-  const T = useTranslation();
+  const {
+    isLoading,
+    Error,
+    fetch: getSupportedLanguages,
+  } = useSupportedLanguages((languages) => console.log(languages));
+
+  useEffect(() => {
+    getSupportedLanguages();
+  }, []);
 
   return (
     <Container>
