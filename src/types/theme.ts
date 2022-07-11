@@ -5,5 +5,6 @@ export type AppTheme = {
     error: string;
     font: string;
     input: string;
+    primary: string;
   };
 };

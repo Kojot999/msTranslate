@@ -1,0 +1,10 @@
+export { TranslatorScreen } from "./Translator/TranslatorScreen";
+export { Footer } from "./Footer/Footer";
+export { Header } from "./Header/Header";
+export { TextInput } from "./TextInput/TextInput";
+export { SelectLanguage } from "./Select/Select";
+export { Loader } from "./Loader/Loader";
+export { SelectedLanguage } from "./Selected/Selected";
+export { Switch } from "./Switch/Switch";
+export { TextCounter } from "./TextCounter/TextCounter";
+export { Message } from "./Message/Message";

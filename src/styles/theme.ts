@@ -2,10 +2,11 @@ import { AppTheme } from "../types";
 
 export const theme: AppTheme = {
   colors: {
-    background: "#bbdefb",
-    foreground: "#42a5f5",
+    background: "#282728",
+    foreground: "#484748",
     error: "#ff80ab",
-    font: "#0e0e0e",
-    input: "#0d47a1",
+    font: "#c8d6e5",
+    input: "#484748",
+    primary: "#fff",
   },
 };
