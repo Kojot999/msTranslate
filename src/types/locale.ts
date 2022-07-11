@@ -9,5 +9,15 @@ export type Dictionary = {
       svgrepo: string;
       libreTranslate: string;
     };
+    message: {
+      tryAgin: string;
+    };
+  };
+  screen: {
+    translator: {
+      loading: string;
+      error: string;
+      noSupportedLanguages: string;
+    };
   };
 };

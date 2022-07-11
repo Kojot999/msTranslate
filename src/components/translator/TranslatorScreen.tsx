@@ -1,68 +1,82 @@
-import styled from "styled-components";
+import * as S from "./TranslatorScreen.styles";
 import { useTranslation } from "hooks";
-import { TextInput } from "components/TextInput/TextInput";
-import { SelectLanguage } from "components/Select/Select";
-import { Loader } from "components/Loader/Loader";
-import { SelectedLanguage } from "components/Selected/Selected";
-import { Switch } from "components/Switch/Switch";
-import { TextCounter } from "components/TextCounter/TextCounter";
+import {
+  SelectLanguage,
+  Loader,
+  Message,
+  TextInput,
+  SelectedLanguage,
+  TextCounter,
+  Switch,
+} from "components";
 import { useSupportedLanguages } from "hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Languages } from "types";
 
 export const TranslatorScreen = () => {
+  const [languages, setLanguages] = useState<Array<Languages>>([]);
+  const T = useTranslation();
   const {
     isLoading,
     Error,
     fetch: getSupportedLanguages,
-  } = useSupportedLanguages((languages) => console.log(languages));
+  } = useSupportedLanguages(setLanguages);
 
   useEffect(() => {
     getSupportedLanguages();
   }, []);
 
+  if (isLoading) {
+    return (
+      <S.LoaderContainer>
+        <Loader>
+          <S.LoaderText>{T.screen.translator.loading}</S.LoaderText>
+        </Loader>
+      </S.LoaderContainer>
+    );
+  }
+  if (Error) {
+    return (
+      <S.MessageContainer>
+        <Message
+          message={T.screen.translator.error}
+          withButton
+          onClick={() => getSupportedLanguages()}
+        />
+      </S.MessageContainer>
+    );
+  }
+  if (languages.length === 0) {
+    return (
+      <S.MessageContainer>
+        <Message
+          message={T.screen.translator.noSupportedLanguages}
+          withButton={false}
+        />
+        ;
+      </S.MessageContainer>
+    );
+  }
+
   return (
-    <Container>
-      <TranslatorContainer>
-        <InputContainer>
+    <S.Container>
+      <S.TranslatorContainer>
+        <S.InputContainer>
           <SelectLanguage />
           <TextInput />
           <Loader />
-          <InputFooter>
+          <S.InputFooter>
             <SelectedLanguage />
             <TextCounter />
-          </InputFooter>
-        </InputContainer>
+          </S.InputFooter>
+        </S.InputContainer>
         <Switch />
-        <InputContainer>
+        <S.InputContainer>
           <SelectLanguage />
           <TextInput />
           <Loader />
-        </InputContainer>
-      </TranslatorContainer>
-    </Container>
+        </S.InputContainer>
+      </S.TranslatorContainer>
+    </S.Container>
   );
 };
-
-const TranslatorContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin-top: 50px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const InputFooter = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;

@@ -1,20 +1,10 @@
-import styled from "styled-components";
+import * as S from "./Selected.styles";
 
 export const SelectedLanguage = () => {
   return (
-    <Container>
-      <Percentage>65%</Percentage>
-      <Language>Polish</Language>
-    </Container>
+    <S.Container>
+      <S.Percentage>65%</S.Percentage>
+      <S.Language>Polish</S.Language>
+    </S.Container>
   );
 };
-const Container = styled.div``;
-const Percentage = styled.span`
-  color: ${({ theme }) => theme.colors.primary};
-`;
-const Language = styled.a`
-  cursor: pointer;
-  text-decoration: underline;
-  margin-left: 5px;
-  color: ${({ theme }) => theme.colors.primary};
-`;

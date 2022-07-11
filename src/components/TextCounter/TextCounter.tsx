@@ -1,9 +1,5 @@
-import styled from "styled-components";
+import * as S from "./TextCounter.styles";
 
 export const TextCounter = () => {
-  return <Counter>0/10000</Counter>;
+  return <S.Counter>0/10000</S.Counter>;
 };
-
-const Counter = styled.div`
-  color: ${({ theme }) => theme.colors.font};
-`;

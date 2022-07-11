@@ -1,23 +1,10 @@
-import styled from "styled-components";
+import * as S from "./Select.styles";
 
 export const SelectLanguage = () => {
   return (
-    <Select>
-      <Option>Polish</Option>
-      <Option>English</Option>
-    </Select>
+    <S.Select>
+      <S.Option>Polish</S.Option>
+      <S.Option>English</S.Option>
+    </S.Select>
   );
 };
-
-const Select = styled.select`
-  max-width: 140px;
-  margin-bottom: 10px;
-
-  font-size: 14px;
-  border: 0;
-  background-color: ${({ theme }) => theme.colors.input};
-  color: ${({ theme }) => theme.colors.font};
-  padding: 3px 10px;
-  border-radius: 5px;
-`;
-const Option = styled.option``;
