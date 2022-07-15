@@ -1,68 +1,42 @@
 import * as S from "./TranslatorScreen.styles";
-import { useTranslation } from "hooks";
 import {
   SelectLanguage,
   Loader,
-  Message,
   TextInput,
   SelectedLanguage,
   TextCounter,
   Switch,
 } from "components";
-import { useSupportedLanguages } from "hooks";
-import { useEffect, useState } from "react";
-import { Languages } from "types";
+import { LanguageCode, Languages } from "types";
+import { useState } from "react";
+import { SelectedLanguages } from "types/selectedLanguages";
 
-export const TranslatorScreen = () => {
-  const [languages, setLanguages] = useState<Array<Languages>>([]);
-  const T = useTranslation();
-  const {
-    isLoading,
-    Error,
-    fetch: getSupportedLanguages,
-  } = useSupportedLanguages(setLanguages);
+type TranslatorScreenProps = {
+  languages: Array<Languages>;
+};
 
-  useEffect(() => {
-    getSupportedLanguages();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <S.LoaderContainer>
-        <Loader>
-          <S.LoaderText>{T.screen.translator.loading}</S.LoaderText>
-        </Loader>
-      </S.LoaderContainer>
-    );
-  }
-  if (Error) {
-    return (
-      <S.MessageContainer>
-        <Message
-          message={T.screen.translator.error}
-          withButton
-          onClick={() => getSupportedLanguages()}
-        />
-      </S.MessageContainer>
-    );
-  }
-  if (languages.length === 0) {
-    return (
-      <S.MessageContainer>
-        <Message
-          message={T.screen.translator.noSupportedLanguages}
-          withButton={false}
-        />
-        ;
-      </S.MessageContainer>
-    );
-  }
+export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
+  languages,
+}) => {
+  const [selectedLanguages, setSelectedLanguages] = useState<SelectedLanguages>(
+    { source: LanguageCode.Polish, target: LanguageCode.English }
+  );
 
   return (
     <S.Container>
       <S.TranslatorContainer>
         <S.InputContainer>
-          <SelectLanguage />
+          <SelectLanguage
+            languages={languages}
+            exclude={[selectedLanguages.target]}
+            onChange={(newCode) =>
+              setSelectedLanguages((prevState) => ({
+                ...prevState,
+                source: newCode,
+              }))
+            }
+            selectedLanguage={selectedLanguages.source}
+          />
           <TextInput />
           <Loader />
           <S.InputFooter>
@@ -70,9 +44,26 @@ export const TranslatorScreen = () => {
             <TextCounter />
           </S.InputFooter>
         </S.InputContainer>
-        <Switch />
+        <Switch
+          onClick={() =>
+            setSelectedLanguages((prevState) => ({
+              source: prevState.target,
+              target: prevState.source,
+            }))
+          }
+        />
         <S.InputContainer>
-          <SelectLanguage />
+          <SelectLanguage
+            languages={languages}
+            exclude={[selectedLanguages.source]}
+            onChange={(newCode) =>
+              setSelectedLanguages((prevState) => ({
+                ...prevState,
+                target: newCode,
+              }))
+            }
+            selectedLanguage={selectedLanguages.target}
+          />
           <TextInput />
           <Loader />
         </S.InputContainer>
