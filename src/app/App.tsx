@@ -24,7 +24,7 @@ export const App = () => {
       return (
         <S.LoaderContainer>
           <Loader>
-            <S.LoaderText>{T.screen.translator.loading}</S.LoaderText>
+            <S.LoaderText>{T.components.app.loading}</S.LoaderText>
           </Loader>
         </S.LoaderContainer>
       );
@@ -33,7 +33,7 @@ export const App = () => {
       return (
         <S.MessageContainer>
           <Message
-            message={T.screen.translator.error}
+            message={T.components.app.error}
             withButton
             onClick={() => getSupportedLanguages()}
           />
@@ -44,7 +44,7 @@ export const App = () => {
       return (
         <S.MessageContainer>
           <Message
-            message={T.screen.translator.noSupportedLanguages}
+            message={T.components.app.noSupportedLanguages}
             withButton={false}
           />
           ;

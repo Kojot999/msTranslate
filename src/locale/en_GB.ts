@@ -2,6 +2,11 @@ import { Dictionary } from "types";
 
 export const en_GB: Dictionary = {
   components: {
+    app: {
+      loading: "Downloading Languages...",
+      error: "Something went wrong",
+      noSupportedLanguages: "No supported Languages",
+    },
     header: {
       title: "msTranslate",
       github: "Github",
@@ -13,13 +18,7 @@ export const en_GB: Dictionary = {
     },
     message: {
       tryAgin: "Try Agin",
-    },
-  },
-  screen: {
-    translator: {
-      loading: "Downloading Languages...",
-      error: "Something went wrong",
-      noSupportedLanguages: "No supported Languages",
+      placeHolder: "Type text here...",
     },
   },
 };

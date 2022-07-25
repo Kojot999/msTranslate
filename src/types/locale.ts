@@ -1,5 +1,10 @@
 export type Dictionary = {
   components: {
+    app: {
+      loading: string;
+      error: string;
+      noSupportedLanguages: string;
+    };
     header: {
       title: string;
       github: string;
@@ -11,13 +16,7 @@ export type Dictionary = {
     };
     message: {
       tryAgin: string;
-    };
-  };
-  screen: {
-    translator: {
-      loading: string;
-      error: string;
-      noSupportedLanguages: string;
+      placeHolder: string;
     };
   };
 };

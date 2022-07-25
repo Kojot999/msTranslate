@@ -10,6 +10,7 @@ import {
 import { LanguageCode, Languages } from "types";
 import { useState } from "react";
 import { SelectedLanguages } from "types/selectedLanguages";
+import { useTranslation } from "hooks";
 
 type TranslatorScreenProps = {
   languages: Array<Languages>;
@@ -21,7 +22,8 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
   const [selectedLanguages, setSelectedLanguages] = useState<SelectedLanguages>(
     { source: LanguageCode.Polish, target: LanguageCode.English }
   );
-
+  const T = useTranslation();
+  const [value, setValue] = useState<string>();
   return (
     <S.Container>
       <S.TranslatorContainer>
@@ -37,11 +39,20 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
             }
             selectedLanguage={selectedLanguages.source}
           />
-          <TextInput />
+          <TextInput
+            value={value}
+            onChangeText={(newValue) => {
+              if (newValue.length <= 5000) {
+                setValue(newValue);
+              }
+            }}
+            autoFocus
+            placeHolder={T.components.message.placeHolder}
+          />
           <Loader />
           <S.InputFooter>
             <SelectedLanguage />
-            <TextCounter />
+            <TextCounter counter={value?.length} limit={5000} />
           </S.InputFooter>
         </S.InputContainer>
         <Switch
@@ -64,7 +75,7 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
             }
             selectedLanguage={selectedLanguages.target}
           />
-          <TextInput />
+          <TextInput disabled />
           <Loader />
         </S.InputContainer>
       </S.TranslatorContainer>
