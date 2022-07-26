@@ -7,10 +7,11 @@ import {
   TextCounter,
   Switch,
 } from "components";
-import { LanguageCode, Languages } from "types";
+import { AutoDetectedLanguage, LanguageCode, Languages } from "types";
 import { useState } from "react";
 import { SelectedLanguages } from "types/selectedLanguages";
 import { useTranslation } from "hooks";
+import { useAutoDetectLanguage } from "hooks/useAutoDetectLanguage";
 
 type TranslatorScreenProps = {
   languages: Array<Languages>;
@@ -24,6 +25,13 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
   );
   const T = useTranslation();
   const [value, setValue] = useState<string>();
+  const [autoDetectedLanguage, setAutoDetectedLanguage] =
+    useState<AutoDetectedLanguage>();
+  const {
+    isLoading,
+    Error,
+    fetch: autoDetectLanguage,
+  } = useAutoDetectLanguage(setAutoDetectedLanguage);
   return (
     <S.Container>
       <S.TranslatorContainer>
@@ -42,16 +50,31 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
           <TextInput
             value={value}
             onChangeText={(newValue) => {
-              if (newValue.length <= 5000) {
-                setValue(newValue);
+              if (newValue.length > 5000) {
+                return;
+              }
+
+              setValue(newValue);
+
+              if (selectedLanguages.source === LanguageCode.English) {
+                autoDetectLanguage(newValue);
               }
             }}
             autoFocus
             placeHolder={T.components.message.placeHolder}
           />
-          <Loader />
+          {isLoading && <Loader />}
           <S.InputFooter>
-            <SelectedLanguage />
+            <SelectedLanguage
+              autoDetectedLanguage={autoDetectedLanguage}
+              Error={Error}
+              onClick={() =>
+                setSelectedLanguages((prevState) => ({
+                  ...prevState,
+                  source: autoDetectedLanguage?.language as LanguageCode,
+                }))
+              }
+            />
             <TextCounter counter={value?.length} limit={5000} />
           </S.InputFooter>
         </S.InputContainer>

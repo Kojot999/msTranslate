@@ -20,5 +20,8 @@ export const en_GB: Dictionary = {
       tryAgin: "Try Agin",
       placeHolder: "Type text here...",
     },
+    confidence: {
+      error: "Language Detector Error",
+    },
   },
 };

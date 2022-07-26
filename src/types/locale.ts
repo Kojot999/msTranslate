@@ -18,5 +18,8 @@ export type Dictionary = {
       tryAgin: string;
       placeHolder: string;
     };
+    confidence: {
+      error: string;
+    };
   };
 };
