@@ -9,4 +9,5 @@ export enum LanguageCode {
   German = "de",
   Polish = "pl",
   Spanish = "es",
+  Auto = "auto",
 }

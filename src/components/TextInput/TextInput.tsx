@@ -7,6 +7,7 @@ type TextInputProps = {
   autoFocus?: boolean;
   placeHolder?: string;
   value?: string;
+  Error?: boolean;
   onChangeText?(text: string): void;
 };
 
@@ -16,6 +17,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   placeHolder,
   value,
   onChangeText,
+  Error,
 }) => {
   useEffect(() => {
     if (!disabled && autoFocus && inputRef.current) {
@@ -36,6 +38,7 @@ export const TextInput: React.FC<TextInputProps> = ({
           onChangeText(event.target.value);
         }
       }}
+      Error={Error}
     />
   );
 };

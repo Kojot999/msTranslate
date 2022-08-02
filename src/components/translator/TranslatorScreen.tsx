@@ -12,6 +12,8 @@ import { useState } from "react";
 import { SelectedLanguages } from "types/selectedLanguages";
 import { useTranslation } from "hooks";
 import { useAutoDetectLanguage } from "hooks/useAutoDetectLanguage";
+import { useDebouncedCallback } from "use-debounce";
+import { useTranslate } from "hooks/useTranslate";
 
 type TranslatorScreenProps = {
   languages: Array<Languages>;
@@ -21,10 +23,11 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
   languages,
 }) => {
   const [selectedLanguages, setSelectedLanguages] = useState<SelectedLanguages>(
-    { source: LanguageCode.Polish, target: LanguageCode.English }
+    { source: LanguageCode.Auto, target: LanguageCode.English }
   );
   const T = useTranslation();
-  const [value, setValue] = useState<string>();
+  const [querry, setQuerry] = useState<string>();
+  const [translatedText, setTranslatedText] = useState<string>();
   const [autoDetectedLanguage, setAutoDetectedLanguage] =
     useState<AutoDetectedLanguage>();
   const {
@@ -32,6 +35,26 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
     Error,
     fetch: autoDetectLanguage,
   } = useAutoDetectLanguage(setAutoDetectedLanguage);
+  const debounceAction = useDebouncedCallback((debouncedCallback) => {
+    if (debouncedCallback.lenght > 5) {
+      return;
+    }
+
+    selectedLanguages.source === LanguageCode.Auto
+      ? autoDetectLanguage(debouncedCallback)
+      : translateText(debouncedCallback, selectedLanguages);
+
+    if (selectedLanguages.source === LanguageCode.Auto) {
+      autoDetectLanguage(debouncedCallback);
+    }
+  }, 1000);
+  const {
+    isLoading: isTranslating,
+    Error: TranslateError,
+    fetch: translateText,
+  } = useTranslate(setTranslatedText);
+
+  console.log(JSON.stringify({ translatedText }));
   return (
     <S.Container>
       <S.TranslatorContainer>
@@ -48,17 +71,13 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
             selectedLanguage={selectedLanguages.source}
           />
           <TextInput
-            value={value}
+            value={querry}
             onChangeText={(newValue) => {
               if (newValue.length > 5000) {
                 return;
               }
-
-              setValue(newValue);
-
-              if (selectedLanguages.source === LanguageCode.English) {
-                autoDetectLanguage(newValue);
-              }
+              setQuerry(newValue);
+              debounceAction(newValue);
             }}
             autoFocus
             placeHolder={T.components.message.placeHolder}
@@ -67,15 +86,17 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
           <S.InputFooter>
             <SelectedLanguage
               autoDetectedLanguage={autoDetectedLanguage}
-              Error={Error}
-              onClick={() =>
+              Error={Error && selectedLanguages.source === LanguageCode.Auto}
+              onClick={() => {
                 setSelectedLanguages((prevState) => ({
                   ...prevState,
                   source: autoDetectedLanguage?.language as LanguageCode,
-                }))
-              }
+                }));
+                setAutoDetectedLanguage(undefined);
+                debounceAction(querry);
+              }}
             />
-            <TextCounter counter={value?.length} limit={5000} />
+            <TextCounter counter={querry?.length} limit={5000} />
           </S.InputFooter>
         </S.InputContainer>
         <Switch
@@ -89,7 +110,7 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
         <S.InputContainer>
           <SelectLanguage
             languages={languages}
-            exclude={[selectedLanguages.source]}
+            exclude={[selectedLanguages.source, LanguageCode.Auto]}
             onChange={(newCode) =>
               setSelectedLanguages((prevState) => ({
                 ...prevState,
@@ -98,8 +119,8 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
             }
             selectedLanguage={selectedLanguages.target}
           />
-          <TextInput disabled />
-          <Loader />
+          <TextInput disabled value={translatedText} Error={TranslateError} />
+          {isTranslating && <Loader />}
         </S.InputContainer>
       </S.TranslatorContainer>
     </S.Container>

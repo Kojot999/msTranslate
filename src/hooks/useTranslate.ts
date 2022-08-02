@@ -1,23 +1,24 @@
 import { APP_CONFIG } from "config";
 import { useState } from "react";
-import { AutoDetectedLanguage } from "types";
+import { AutoDetectedLanguage, Languages, SelectedLanguages } from "types";
 
-export const useAutoDetectLanguage = (
-  onSuccess: (autoDetectedLanguage: AutoDetectedLanguage) => void
-) => {
+export const useTranslate = (onSuccess: (translatedText: string) => void) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [Error, setError] = useState<boolean>(false);
   return {
     isLoading,
     Error,
 
-    fetch: (query: string) => {
+    fetch: (query: string, selectedLanguages: SelectedLanguages) => {
       setLoading(true);
       setError(false);
-      fetch(`${APP_CONFIG.API_URL}/detect`, {
+      fetch(`${APP_CONFIG.API_URL}/translate`, {
         method: "POST",
         body: JSON.stringify({
           q: query,
+          source: selectedLanguages.source,
+          target: selectedLanguages.target,
+          format: "text",
         }),
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +31,7 @@ export const useAutoDetectLanguage = (
           throw response;
         })
         .then((response) => response.json())
-        .then(([autoDetectLanguage]) => onSuccess(autoDetectLanguage))
+        .then(([{ translatedText }]) => onSuccess(translatedText))
         .catch(() => {
           setError(true);
         })

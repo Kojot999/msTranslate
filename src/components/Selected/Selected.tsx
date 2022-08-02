@@ -1,5 +1,6 @@
 import { useTranslation } from "hooks";
-import { AutoDetectedLanguage } from "types";
+import { useCallback } from "react";
+import { AutoDetectedLanguage, LanguageCode } from "types";
 import * as S from "./Selected.styles";
 
 export type LanguageProps = {
@@ -19,6 +20,17 @@ export const SelectedLanguage: React.FC<SelectedLanguageProps> = ({
 }) => {
   const { confidence, language } = autoDetectedLanguage;
   const T = useTranslation();
+  const getDetectedLanguage = useCallback(() => {
+    if (!language) {
+      return undefined;
+    }
+    const [detectedLanguage] =
+      Object.entries(LanguageCode).find(
+        ([, languageCode]) => language === languageCode
+      ) || [];
+
+    return detectedLanguage ? `(${getDetectedLanguage})` : undefined;
+  }, [language]);
 
   return (
     <S.Container>
@@ -32,7 +44,7 @@ export const SelectedLanguage: React.FC<SelectedLanguageProps> = ({
         disabled={Error}
       >
         {Error && T.components.confidence.error}
-        {language && `(${language})`}
+        {language && getDetectedLanguage()}
       </S.Language>
     </S.Container>
   );

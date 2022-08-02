@@ -1,6 +1,9 @@
 import { Dictionary } from "types";
 
 export const en_GB: Dictionary = {
+  common: {
+    autoTranslate: "Auto Translate",
+  },
   components: {
     app: {
       loading: "Downloading Languages...",
@@ -17,7 +20,7 @@ export const en_GB: Dictionary = {
       libreTranslate: " LibreTranslate",
     },
     message: {
-      tryAgin: "Try Agin",
+      tryAgin: "Try Again",
       placeHolder: "Type text here...",
     },
     confidence: {

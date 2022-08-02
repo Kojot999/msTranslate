@@ -1,4 +1,7 @@
 export type Dictionary = {
+  common: {
+    autoTranslate: string;
+  };
   components: {
     app: {
       loading: string;
