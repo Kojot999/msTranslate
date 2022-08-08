@@ -29,7 +29,7 @@ export const SelectedLanguage: React.FC<SelectedLanguageProps> = ({
         ([, languageCode]) => language === languageCode
       ) || [];
 
-    return detectedLanguage ? `(${getDetectedLanguage})` : undefined;
+    return detectedLanguage ? `(${language})` : undefined;
   }, [language]);
 
   return (

@@ -1,43 +1,33 @@
 import { APP_CONFIG } from "config";
 import { useState } from "react";
 import { AutoDetectedLanguage, Languages, SelectedLanguages } from "types";
+import axios from "axios";
 
-export const useTranslate = (onSuccess: (translatedText: string) => void) => {
+export const useTranslate = (setData: (translatedText: string) => void) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [Error, setError] = useState<boolean>(false);
-  return {
-    isLoading,
-    Error,
+  const translateText = (
+    querry: any,
+    selectedLanguages: { source: string; target: string }
+  ) => {
+    setLoading(true);
 
-    fetch: (query: string, selectedLanguages: SelectedLanguages) => {
-      setLoading(true);
-      setError(false);
-      fetch(`${APP_CONFIG.API_URL}/translate`, {
-        method: "POST",
-        body: JSON.stringify({
-          q: query,
-          source: selectedLanguages.source,
-          target: selectedLanguages.target,
-          format: "text",
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    axios
+      .post(`${APP_CONFIG.API_URL}/translate`, {
+        q: querry,
+        source: selectedLanguages.source,
+        target: selectedLanguages.target,
+        format: "text",
       })
-        .then((response) => {
-          if (response.ok) {
-            return response;
-          }
-          throw response;
-        })
-        .then((response) => response.json())
-        .then(([{ translatedText }]) => onSuccess(translatedText))
-        .catch(() => {
-          setError(true);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    },
+      .then((res) => {
+        setLoading(false);
+        setData(res?.data?.translatedText);
+      })
+      .catch((err) => {
+        setError(true);
+        console.log(err);
+      });
   };
+
+  return { translateText, Error, isLoading };
 };

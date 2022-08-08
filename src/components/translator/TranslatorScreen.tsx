@@ -8,7 +8,7 @@ import {
   Switch,
 } from "components";
 import { AutoDetectedLanguage, LanguageCode, Languages } from "types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectedLanguages } from "types/selectedLanguages";
 import { useTranslation } from "hooks";
 import { useAutoDetectLanguage } from "hooks/useAutoDetectLanguage";
@@ -49,12 +49,15 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
     }
   }, 1000);
   const {
-    isLoading: isTranslating,
+    translateText,
     Error: TranslateError,
-    fetch: translateText,
+    isLoading: isTranslating,
   } = useTranslate(setTranslatedText);
 
-  console.log(JSON.stringify({ translatedText }));
+  useEffect(() => {
+    console.log(translatedText);
+  }, [translatedText]);
+
   return (
     <S.Container>
       <S.TranslatorContainer>
@@ -119,7 +122,11 @@ export const TranslatorScreen: React.FC<TranslatorScreenProps> = ({
             }
             selectedLanguage={selectedLanguages.target}
           />
-          <TextInput disabled value={translatedText} Error={TranslateError} />
+          <TextInput
+            disabled
+            value={translatedText || ""}
+            Error={TranslateError}
+          />
           {isTranslating && <Loader />}
         </S.InputContainer>
       </S.TranslatorContainer>
