@@ -1,10 +1,13 @@
+import { Language } from "components/Selected/Selected.styles";
 import { APP_CONFIG } from "config";
 import { useState } from "react";
-import { Languages } from "types";
+import { LanguageCode, Languages } from "types";
+import { useTranslation } from "./useTranslations";
 
 export const useSupportedLanguages = (
   onSuccess: (languages: Array<Languages>) => void
 ) => {
+  const T = useTranslation();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [Error, setError] = useState<boolean>(false);
 
@@ -23,7 +26,15 @@ export const useSupportedLanguages = (
           throw response;
         })
         .then((response) => response.json())
-        .then(onSuccess)
+        .then((languages) => {
+          const allLanguages: Array<Languages> = [
+            {
+              code: LanguageCode.Auto,
+              name: T.common.autoTranslate,
+            },
+          ].concat(languages);
+          onSuccess(allLanguages);
+        })
         .catch(() => {
           setError(true);
         })

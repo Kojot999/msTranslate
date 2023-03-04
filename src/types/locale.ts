@@ -1,5 +1,13 @@
 export type Dictionary = {
+  common: {
+    autoTranslate: string;
+  };
   components: {
+    app: {
+      loading: string;
+      error: string;
+      noSupportedLanguages: string;
+    };
     header: {
       title: string;
       github: string;
@@ -11,13 +19,10 @@ export type Dictionary = {
     };
     message: {
       tryAgin: string;
+      placeHolder: string;
     };
-  };
-  screen: {
-    translator: {
-      loading: string;
+    confidence: {
       error: string;
-      noSupportedLanguages: string;
     };
   };
 };

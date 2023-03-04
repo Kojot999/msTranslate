@@ -1,6 +1,10 @@
 import * as S from "./Switch.styles";
 import { Images } from "assets";
 
-export const Switch = () => {
-  return <S.SwitchIcon src={Images.exchange} />;
+type SwithProps = {
+  onClick(): void;
+};
+
+export const Switch: React.FC<SwithProps> = ({ onClick }) => {
+  return <S.SwitchIcon src={Images.exchange} onClick={onClick} />;
 };

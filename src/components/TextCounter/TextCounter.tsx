@@ -1,5 +1,14 @@
 import * as S from "./TextCounter.styles";
 
-export const TextCounter = () => {
-  return <S.Counter>0/10000</S.Counter>;
+type TextCounterProps = {
+  counter?: number;
+  limit: number;
+};
+
+export const TextCounter: React.FC<TextCounterProps> = ({ limit, counter }) => {
+  return (
+    <S.Counter>
+      {counter}/{limit}
+    </S.Counter>
+  );
 };
